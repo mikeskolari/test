@@ -1,30 +1,33 @@
 module.exports = function(grunt) {
 
+	// Load package.json data
 	var pkg = require('./package.json');
-
+	
 	grunt.initConfig({
-
-//		pkg: grunt.file.readJSON('package.json'),
-
+		
+		exec: {
+			create: {
+				cmd: function() {
+					grunt.file.mkdir(pkg.path);
+					grunt.file.mkdir(pkg.path+"/.cordova");						 
+					grunt.file.write(pkg.path+"/.cordova/config.json", JSON.stringify(configjson, null, 2));
+					return 'cordova create '+pkg.path+' '+pkg.id+' '+pkg.name;
+				}
+		  	}
+		},
+		
 		cordovacli: {
 			options: {
-				path : pkg.path,
+				path: pkg.path,
 				cli: 'cordova'
-			},
-			init: {
-				options: {
-					command: ['create','platform','plugin'],
-					id: pkg.id,
-					name: pkg.name,
-		          		platforms: pkg.platforms,
-					plugins: pkg.plugins
-				}
-			},
+			},			
 			create: {
-			    	options: {
+				options: {
 				    command: 'create',
-				    id: pkg.id
-			    	}
+				    id: pkg.id,
+				    name: pkg.name,
+					path: pkg.path
+				}
 			},
 			add_platforms: {
 				options: {
@@ -37,16 +40,7 @@ module.exports = function(grunt) {
 				options: {
 				    command: 'plugin',
 				    action: 'add',
-                                    plugins: pkg.plugins
-				}
-			},
-			remove_plugin: {
-				options: {
-				    command: 'plugin',
-				    action: 'rm',
-				    plugins: [
-				        'battery-status'
-				    ]
+				    plugins: pkg.plugins
 				}
 			},
 			build_android: {
@@ -54,12 +48,15 @@ module.exports = function(grunt) {
 				    command: 'build',
 				    platforms: ['android']
 				}
-			}
+			}    
 		}
-	});
 
+	});
+	
+	grunt.loadNpmTasks('grunt-exec');
 	grunt.loadNpmTasks('grunt-cordovacli');
 
-	grunt.registerTask('init', ['cordovacli:init']);
-
+	grunt.task.registerTask('init',['cordovacli:create','cordovacli:add_platforms','cordovacli:add_plugins']);
+	grunt.task.registerTask('platforms',['cordovacli:add_platforms']);	
+	grunt.task.registerTask('plugins',['cordovacli:add_plugins']);
 };

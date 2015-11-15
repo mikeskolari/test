@@ -1,8 +1,22 @@
 {
-  "name": "my-project-name",
+  "name": "HelloWorld",
+  "path": "app",
+  "id" : "com.bopen.mike",
+  "platforms" : ["android"],
+  "plugins": [
+	"vibration",
+        "cordova-plugin-crosswalk-webview"
+   ],
   "version": "0.1.0",
+  "private": true,
   "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-cordovacli": "^0.8.2"
+    "cca": "^0.8.0",
+    "cordova": "^5.4.0",
+    "grunt": "^0.4.5",
+    "grunt-cordovacli": "^0.8.2",
+    "grunt-exec": "^0.4.6"
+  },
+  "dependencies": {
+    "cordova": "^5.4.0"
   }
 }
